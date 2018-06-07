@@ -1,12 +1,13 @@
 import React from 'react'
 import VideoPlayer from '../VideoPlayer/index'
+import VideoDetails from '../VideoDetails'
 import { debounce } from '../../helpers'
 
 class VideoPlayerAndDetailsContainer extends React.Component {
 	state = {
 		width: 854,
 		videoHeight: 480,
-		selectedVideoId: 'bvhBxSOz_o8'
+		selectedVideoId: 'GZdpfz3KUIg'
 	}
 
 	componentWillMount () {
@@ -16,6 +17,16 @@ class VideoPlayerAndDetailsContainer extends React.Component {
 	}
 
 	componentDidMount () {
+		fetch(`http://localhost:3003/api/video/${this.state.selectedVideoId}`)
+			.then(res => res.json())
+			.then(data => {
+				this.setState({
+					videoDetails: data
+				})
+			})
+			.catch(err => {
+				console.error('err: ', err)
+			})
 		this.calculateSize()
 	}
 
@@ -40,6 +51,7 @@ class VideoPlayerAndDetailsContainer extends React.Component {
 					width={this.state.width}
 					videoId={this.state.selectedVideoId}
 				/>
+				<VideoDetails {...this.state.videoDetails} width={this.state.width}/>
 			</div>
 		)
 	}
